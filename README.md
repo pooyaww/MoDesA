@@ -65,8 +65,7 @@ This block is available in our custom library [MoDesA_lib](matlab/MoDesA_lib.slx
 
 ## Running the [test_model_hw_only](models/test_model/test_model_hw_only.slx) test
 Before running the test, make sure all models in the [test_model](models/test_model) folder are exported/saved to your installed MATLAB version. 
-If your current version is newer than R2017.a, (the provided test models were created from our side with MATLAB/Simulink R2017.a) you can just save the model with your installed version and delete the old .R2017a backup model file.
-If your current version is older than R2017.a, send us a mail and we will export the test models to your version.
+If your current version is newer than R2018.a, (the provided test models were created from our side with MATLAB/Simulink R2018.a) you can just save the model with your installed version and delete the old .R2018a backup model file.
 
 Next, make sure MATLAB, Vivado and Vivado HLS is set in your environment PATH variable and can be accessed from the command line.
 
