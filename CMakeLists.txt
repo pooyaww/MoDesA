@@ -67,7 +67,9 @@ set(model_path "test_model")
 # default option to profile sw execution of the model
 set(profiling "off")
 # default device = ZedBoard
-set(device "xc7z020clg484-1")
+#set(device "xc7z020clg484-1")
+# ZCU106
+set(device "xczu7ev-ffvc1156-2-e")
 # default clk = 10 ns = 100MHz
 set(clk "10")
 # set accurate for synthesis evaluation with Vivado
