@@ -15,28 +15,28 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-# ------------------------------------------------------------------------- 
+# -------------------------------------------------------------------------
 #
-#  @author  Streit Franz-Josef                                                    
-#  @mail    franz-josef.streit@fau.de                                                   
-#  @date    09 November 2017                                                      
-#  @version 0.1                                                                  
+#  @author  Streit Franz-Josef
+#  @mail    franz-josef.streit@fau.de
+#  @date    09 November 2017
+#  @version 0.1
 #  @brief   cmake topmodule for running MoDesA
-#                                                                                
+#
 ##
 
 function(topmodule synthesis matlab profiling model_name model_path device clk syn_opt)
 
   # some general settings
-  set(CMAKE_C_COMPILER gcc)                                     
-  set(CMAKE_CXX_COMPILER g++)  
+  set(CMAKE_C_COMPILER gcc)
+  set(CMAKE_CXX_COMPILER g++)
 
-  message(STATUS "Host platform is: " ${CMAKE_SYSTEM}) 
-  message(STATUS "Matlab code generation is: " ${matlab})           
-  message(STATUS "Synthesis is: " ${synthesis})              
+  message(STATUS "Host platform is: " ${CMAKE_SYSTEM})
+  message(STATUS "Matlab code generation is: " ${matlab})
+  message(STATUS "Synthesis is: " ${synthesis})
 
-  include(createHardwareIPB)   
-  include(createChipsIPB)   
+  include(createHardwareIPB)
+  include(createChipsIPB)
   include(createBlockdesign)
   include(copyGenFiles)
 
@@ -68,27 +68,27 @@ function(topmodule synthesis matlab profiling model_name model_path device clk s
     message(STATUS "XILINX_VIVADO: $ENV{XILINX_VIVADO}")
     message(STATUS "XILINX_VIVADO_HLS: $ENV{XILINX_VIVADO_HLS}")
     message(STATUS "start defining IP-CORES from model ${model_name}")
-    
+
     foreach(ipb_folder ${ipb_folders})
       message(STATUS "Configure Hardware IPB-${ipb_folder} with Vivado HLS")
       file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/templates/dummy.cpp" DESTINATION "${CMAKE_BINARY_DIR}/${model_name}_hw/${ipb_folder}")
-      # call createHardwareIPB module with parameters   
-      createHardwareIPB(${model_name} ${ipb_folder} ${ip_repo})    
+      # call createHardwareIPB module with parameters
+      createHardwareIPB(${model_name} ${ipb_folder} ${ip_repo})
     endforeach()
 
     foreach(chip_folder ${chip_folders})
       message(STATUS "Configure Processor ${chip_folder} with Chips")
-      # call createChipsIPB module with parameters   
-      createChipsIPB(${model_name} ${chip_folder} ${ip_repo})    
+      # call createChipsIPB module with parameters
+      createChipsIPB(${model_name} ${chip_folder} ${ip_repo})
     endforeach()
 
     message(STATUS "Makefile successfully generated")
 
-    # generate block design only if we previously tagged blocks as hw 
+    # generate block design only if we previously tagged blocks as hw
     if(EXISTS "${CMAKE_BINARY_DIR}/${model_name}_hw" OR EXISTS "${CMAKE_BINARY_DIR}/${model_name}_chip")
       createBlockdesign(${model_name} ${ip_repo})
       message(STATUS "run make all to generate all IP-Blocks")
       message(STATUS "then run make Vivado_${model_name} to create Vivado project")
     endif()
-  endif()  
+  endif()
 endfunction()

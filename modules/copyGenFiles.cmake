@@ -77,6 +77,8 @@ function(copyGenFiles ipb_folders chip_folders model)
   endif()
 
   # If stimuli folder was generated copy it to build folder
+  # In case of rebuild, all the folders in CMAKE_BINARY_DIR should be deleted
+  # otherwise these RENAME commands don't work
   if(EXISTS "${matlab_dir}/stimuli")
     message(STATUS "found and copied stimuli data")
     file(RENAME ${matlab_dir}/stimuli ${CMAKE_BINARY_DIR}/stimuli)
