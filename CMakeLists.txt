@@ -57,13 +57,8 @@ set(synthesis "on")
 
 #set(model_name "test_model_hw_only")
 #set(model_name "test_model_hw_sw")
-<<<<<<< HEAD
-set(model_name "test_model_hw_sw_hw_sw")
-#set(model_name "test_model_sw_hw")
-=======
 #set(model_name "test_model_hw_sw_hw_sw")
 set(model_name "test_model_sw_hw")
->>>>>>> 7bb9f4b1b63ed2eb103afc7d02a631b2a6a339d6
 #set(model_name "test_model_sw_only")
 
 set(model_path "test_model")
