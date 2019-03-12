@@ -57,8 +57,8 @@ if {$hwswdesign == "true"} {
     file copy $RUNTIME .
   } else {
     puts "adapters already exist in current folder"
-  }  
-}  
+  }
+}
 
 #Create project
 create_project ${PROJNAME} ./${PROJNAME} -part ${PART}
@@ -132,7 +132,7 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
 
      # open the block design
      open_bd_design "$proj_dir/$PROJNAME.srcs/sources_1/bd/design_1/design_1.bd"
-    
+
      if {$hwswdesign == "true"} {
       # create default IPBs for a HW/SW Co-Design
       # instanciate zynq processing system
@@ -210,11 +210,11 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
        create_bd_cell -type ip -vlnv FAU:simulink_blocks:${ip_name}:1.0 ${ip_name}
        if {[catch {
        # clock HLS IPB
-        connect_bd_net -quiet $clockport [get_bd_pins ${ip_name}/ap_clk] 
+        connect_bd_net -quiet $clockport [get_bd_pins ${ip_name}/ap_clk]
        }]} {}
        if {[catch {
        # clock Chip IPB
-        connect_bd_net -quiet $clockport [get_bd_pins ${ip_name}/clk] 
+        connect_bd_net -quiet $clockport [get_bd_pins ${ip_name}/clk]
        }]} {}
        if {[catch {
        # reset HLS IPB
@@ -231,7 +231,7 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
     set write_cnt 0
     set adapter_cnt 0
     # here in the global variable lines we have the connections of the ip blocks
-    foreach nl $::lines { 
+    foreach nl $::lines {
       puts "Connection: $nl"
       # Split into fields on ->
       set fields [split $nl "->"]
@@ -255,13 +255,13 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
                 }
               }
               # generate read adapter to read from memory
-              puts "create read_adapter [lindex $read_adapter $read_cnt]"   
+              puts "create read_adapter [lindex $read_adapter $read_cnt]"
               set datawidth [expr 8 * [get_property CONFIG.TDATA_NUM_BYTES [get_bd_intf_pins ${sink_block}]]]
               create_bd_cell -type ip -vlnv FAU:smoc_synth:read_adapter reg_[lindex $read_adapter $read_cnt]
               create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma dma_[lindex $read_adapter $read_cnt]
               set_property -dict [list CONFIG.c_include_sg {0} CONFIG.c_sg_include_stscntrl_strm {0} CONFIG.c_m_axis_mm2s_tdata_width ${datawidth} CONFIG.c_include_s2mm {0}] [get_bd_cells dma_[lindex $read_adapter $read_cnt]]
               set_property -dict [list CONFIG.DATA_WIDTH ${datawidth}] [get_bd_cells reg_[lindex $read_adapter $read_cnt]]
-              connect_bd_intf_net [get_bd_intf_pins reg_[lindex $read_adapter $read_cnt]/data_out] [get_bd_intf_pins ${sink_block}]  
+              connect_bd_intf_net [get_bd_intf_pins reg_[lindex $read_adapter $read_cnt]/data_out] [get_bd_intf_pins ${sink_block}]
               connect_bd_net $clockport [get_bd_pins dma_[lindex $read_adapter $read_cnt]/m_axi_mm2s_aclk]
               connect_bd_net $clockport [get_bd_pins dma_[lindex $read_adapter $read_cnt]/s_axi_lite_aclk]
               connect_bd_net $clockport [get_bd_pins reg_[lindex $read_adapter $read_cnt]/s00_axi_aclk]
@@ -291,7 +291,7 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
               incr adapter_cnt
             }
          } elseif {$src_block == "extern"} {
-              puts "Make ${sink_block} external"  
+              puts "Make ${sink_block} external"
               make_bd_intf_pins_external [get_bd_intf_pins ${sink_block}]
               set intf_sink_block ""
               foreach port_sink_block [get_bd_intf_ports -filter {NAME =~ "*outputArg*" || NAME =~ "*inputArg*"}] {
@@ -313,19 +313,19 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
                 } 
               }
               # generate write adapter to write to memory
-              puts "create write_adapter [lindex $write_adapter $write_cnt]"    
+              puts "create write_adapter [lindex $write_adapter $write_cnt]"
               set datawidth [expr 8 * [get_property CONFIG.TDATA_NUM_BYTES [get_bd_intf_pins ${src_block}]]]
-              create_bd_cell -type ip -vlnv FAU:smoc_synth:write_adapter reg_[lindex $write_adapter $write_cnt] 
+              create_bd_cell -type ip -vlnv FAU:smoc_synth:write_adapter reg_[lindex $write_adapter $write_cnt]
               create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma dma_[lindex $write_adapter $write_cnt]
               set_property -dict [list CONFIG.c_include_sg {0} CONFIG.c_sg_include_stscntrl_strm {0} CONFIG.c_include_mm2s {0}] [get_bd_cells dma_[lindex $write_adapter $write_cnt]]
               set_property -dict [list CONFIG.DATA_WIDTH ${datawidth}] [get_bd_cells reg_[lindex $write_adapter $write_cnt]]
-              connect_bd_intf_net [get_bd_intf_pins ${src_block}] [get_bd_intf_pins reg_[lindex $write_adapter $write_cnt]/data_in]  
+              connect_bd_intf_net [get_bd_intf_pins ${src_block}] [get_bd_intf_pins reg_[lindex $write_adapter $write_cnt]/data_in]
               connect_bd_net $clockport [get_bd_pins dma_[lindex $write_adapter $write_cnt]/m_axi_s2mm_aclk]
               connect_bd_net $clockport [get_bd_pins dma_[lindex $write_adapter $write_cnt]/s_axi_lite_aclk]
               connect_bd_net $clockport [get_bd_pins reg_[lindex $write_adapter $write_cnt]/s00_axi_aclk]
               connect_bd_net [get_bd_pins dma_[lindex $write_adapter $write_cnt]/axi_resetn] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
               connect_bd_net [get_bd_pins reg_[lindex $write_adapter $write_cnt]/s00_axi_aresetn] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
-              connect_bd_intf_net [get_bd_intf_pins dma_[lindex $write_adapter $write_cnt]/S_AXIS_S2MM] [get_bd_intf_pins reg_[lindex $write_adapter $write_cnt]/to_dma] 
+              connect_bd_intf_net [get_bd_intf_pins dma_[lindex $write_adapter $write_cnt]/S_AXIS_S2MM] [get_bd_intf_pins reg_[lindex $write_adapter $write_cnt]/to_dma]
               connect_bd_intf_net [get_bd_intf_pins dma_[lindex $write_adapter $write_cnt]/M_AXI_S2MM] [get_bd_intf_pins smartconnect_0/S0[expr ${adapter_cnt}]_AXI]
               set_property -dict [list CONFIG.NUM_MI [expr [get_property CONFIG.NUM_MI [get_bd_cells axi_interconnect_0]] + 1]] [get_bd_cells axi_interconnect_0]
               if {[expr ${adapter_cnt}*2 < 10]} {
@@ -349,7 +349,7 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
               incr adapter_cnt
             }
          } elseif {$sink_block == "extern"} {
-              puts "Make ${src_block} external"  
+              puts "Make ${src_block} external"
               make_bd_intf_pins_external [get_bd_intf_pins ${src_block}]
               set intf_src_block ""
               foreach port_src_block [get_bd_intf_ports -filter {NAME =~ "*outputArg*" || NAME =~ "*inputArg*"}] {
@@ -357,14 +357,14 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
               }
               set_property CONFIG.ASSOCIATED_BUSIF [string trimright ${intf_src_block} ":"] [get_bd_ports /clk]
         } else {
-            puts "Connect ${src_block} with ${sink_block}"  
-            connect_bd_intf_net [get_bd_intf_pins ${src_block}] [get_bd_intf_pins ${sink_block}]  
+            puts "Connect ${src_block} with ${sink_block}"
+            connect_bd_intf_net [get_bd_intf_pins ${src_block}] [get_bd_intf_pins ${sink_block}]
          }
       }
-    }   
+    }
 
 if {$hwswdesign == "true"} {
-# Use Address Editor to automatically map addresses 
+# Use Address Editor to automatically map addresses
 assign_bd_address
 }
 
@@ -379,7 +379,7 @@ if {[catch {
 #generate testbench
 tclapp::xilinx::designutils::write_ip_integrator_testbench -addToProject -output "$proj_dir/$PROJNAME.sim/test_design_1.vhd"
        }]} {
-   puts "It seems xilinx designutils are not installed on your Vivado version. Try to intall them from the Xilinx Tcl store to use this feature"  
+   puts "It seems xilinx designutils are not installed on your Vivado version. Try to intall them from the Xilinx Tcl store to use this feature"
 }
 
 source $tb_lib_dir/createTB.tcl

@@ -39,11 +39,11 @@ use std.textio.all;
 -- stimuli --
 -------------
 entity test_design_1 is
-  generic ( 
+  generic (
   @in_files@
   @out_files@
   DUMMY: string := ""
-); 
+);
 end test_design_1;
 
 
@@ -63,7 +63,7 @@ end component design_1;
 -------------------------
 -- signal declarations --
 -------------------------
-constant PERIOD : time := @clock_periode@ ns; 
+constant PERIOD : time := @clock_periode@ ns;
 @frame_sizes_in@
 @frame_sizes_out@
 
@@ -75,7 +75,7 @@ signal rst : STD_LOGIC := '1';
 
 @cnt_in@
 @cnt_out@
-signal frame_cnt : integer range 0 to 83 := 0; 
+signal frame_cnt : integer range 0 to 83 := 0;
 signal clk_cnt : integer range 1 to 10000000 :=1;
 
 
@@ -86,7 +86,7 @@ begin
 ------------------------------
 -- component instantiations --
 ------------------------------
-DUT: component design_1 
+DUT: component design_1
 port map (
           clk => clk,
           @input3@
@@ -113,13 +113,13 @@ begin
         @read1@
         stateSTIMULI <= SEND_DATA;
       when SEND_DATA =>
-        @read2@	
+        @read2@
 	@check_idle@
       when others =>
-        stateSTIMULI <= IDLE;                                       
-    end case;       
+        stateSTIMULI <= IDLE;
+    end case;
   end if;
-end process read_file_pr; 
+end process read_file_pr;
 
 -- Write data to file
 write_file_pr : process
@@ -128,14 +128,14 @@ write_file_pr : process
   @file_out@
 begin
   wait until rising_edge(clk);
-  if (rst = '1') then        
+  if (rst = '1') then
     @write1@
   else
     clk_cnt<=clk_cnt+1;
     @write2@
     @write3@
   end if;
-end process write_file_pr; 
+end process write_file_pr;
 
 end TB;
 
