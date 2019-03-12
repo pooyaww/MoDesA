@@ -58,8 +58,8 @@ if {$hwswdesign == "true"} {
     file copy $RUNTIME .
   } else {
     puts "adapters already exist in current folder"
-  }  
-}  
+  }
+}
 
 #Create project
 create_project ${PROJNAME} ./${PROJNAME} -part ${PART}
