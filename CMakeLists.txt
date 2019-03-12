@@ -57,8 +57,13 @@ set(synthesis "on")
 
 #set(model_name "test_model_hw_only")
 #set(model_name "test_model_hw_sw")
+<<<<<<< HEAD
 set(model_name "test_model_hw_sw_hw_sw")
 #set(model_name "test_model_sw_hw")
+=======
+#set(model_name "test_model_hw_sw_hw_sw")
+set(model_name "test_model_sw_hw")
+>>>>>>> 7bb9f4b1b63ed2eb103afc7d02a631b2a6a339d6
 #set(model_name "test_model_sw_only")
 
 set(model_path "test_model")
@@ -67,7 +72,11 @@ set(model_path "test_model")
 # default option to profile sw execution of the model
 set(profiling "off")
 # default device = ZedBoard
-set(device "xc7z020clg484-1")
+#set(device "xc7z020clg484-1")
+# ZCU106
+set(device "xczu7ev-ffvc1156-2-e")
+# set board
+set(board "zcu106")
 # default clk = 10 ns = 100MHz
 set(clk "10")
 # set accurate for synthesis evaluation with Vivado
@@ -75,4 +84,4 @@ set(clk "10")
 set(syn_opt "fast")
 
 # here we call the topmodule with all the parameters
-topmodule(${synthesis} ${matlab} ${profiling} ${model_name} ${model_path} ${device} ${clk} ${syn_opt})
+topmodule(${synthesis} ${matlab} ${profiling} ${model_name} ${model_path} ${device} ${board} ${clk} ${syn_opt})

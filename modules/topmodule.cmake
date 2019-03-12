@@ -25,7 +25,7 @@
 #
 ##
 
-function(topmodule synthesis matlab profiling model_name model_path device clk syn_opt)
+function(topmodule synthesis matlab profiling model_name model_path device board clk syn_opt)
 
   # some general settings
   set(CMAKE_C_COMPILER gcc)

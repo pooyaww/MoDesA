@@ -48,6 +48,7 @@ In the [CMakeLists.txt](CMakeLists.txt) file the user specifies the following pa
 `model_path`|  path of your Simulink model within [models](models)
 `profiling` | `on` or `off` generates application graph from the model
 `device`    |  target Zynq device e.g., `xc7z020clg484-1` (ZedBoard)
+`board`     | Evaluation board name with a BSP in vivado
 `clk`       |  target clock speed in ns e.g., `10`
 `syn_opt`   | `fast` or `accurate` Vivado HLS synthesis option
 
