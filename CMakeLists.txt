@@ -70,6 +70,8 @@ set(profiling "off")
 #set(device "xc7z020clg484-1")
 # ZCU106
 set(device "xczu7ev-ffvc1156-2-e")
+# set board
+set(board "zcu106")
 # default clk = 10 ns = 100MHz
 set(clk "10")
 # set accurate for synthesis evaluation with Vivado
@@ -77,4 +79,4 @@ set(clk "10")
 set(syn_opt "fast")
 
 # here we call the topmodule with all the parameters
-topmodule(${synthesis} ${matlab} ${profiling} ${model_name} ${model_path} ${device} ${clk} ${syn_opt})
+topmodule(${synthesis} ${matlab} ${profiling} ${model_name} ${model_path} ${device} ${board} ${clk} ${syn_opt})

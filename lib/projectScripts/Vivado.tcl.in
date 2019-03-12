@@ -31,6 +31,7 @@ set PART "@device@"
 set PERIOD "@clk@"
 set PROJNAME "Vivado_$MODELNAME"
 set BUILDDIR "@build_dir@"
+set BOARD    "@board@"
 
 # Set paths to helper functions for TB generation
 set tb_lib_dir "../lib/tbScripts"
@@ -72,6 +73,7 @@ set_property -name "default_lib" -value "xil_defaultlib" -objects $obj
 set_property -name "ip_cache_permissions" -value "read write" -objects $obj
 set_property -name "ip_output_repo" -value "$proj_dir/$PROJNAME.cache/ip" -objects $obj
 set_property -name "part" -value "$PART" -objects $obj
+set_property board_part xilinx.com:$BOARD:part0:2.2 [current_project]
 set_property -name "sim.ip.auto_export_scripts" -value "1" -objects $obj
 set_property -name "simulator_language" -value "VHDL" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
