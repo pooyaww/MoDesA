@@ -141,8 +141,10 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
       #create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7 processing_system7_0
        create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.2 zynq_ultra_ps_e_0
       # config zynq processing system
-      set_property -dict [list CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ [expr (1/($PERIOD*pow(10,-9))*pow(10,-6))] CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.PCW_S_AXI_HP0_DATA_WIDTH {32}] [get_bd_cells zynq_ultra_ps_e_0]
-      set_property -dict [list CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} CONFIG.PCW_TTC0_PERIPHERAL_ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
+      #set_property -dict [list CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ [expr (1/($PERIOD*pow(10,-9))*pow(10,-6))] CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.PCW_S_AXI_HP0_DATA_WIDTH {32}] [get_bd_cells zynq_ultra_ps_e_0]
+      set_property -dict [list CONFIG.PSU__USE__S_AXI_GP2 {1} CONFIG.PSU__SAXIGP2__DATA_WIDTH {32}] [get_bd_cells zynq_ultra_ps_e_0]
+      #set_property -dict [list CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} CONFIG.PCW_TTC0_PERIPHERAL_ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
+      set_property -dict [list CONFIG.PSU__QSPI__PERIPHERAL__ENABLE {1} CONFIG.PSU__QSPI__GRP_FBCLK__ENABLE {0} CONFIG.PSU__TTC0__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
       # add AXI Light interconnect
       create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect axi_interconnect_0
       # change interconnect to one Master
@@ -154,7 +156,7 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
       # add processor reset system
       create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_0
       # make DDR and FIXED_IO external
-      apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e_0 -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells zynq_ultra_ps_e_0]
+      apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells zynq_ultra_ps_e_0]
       # connect processor clock to default IPBs
       set clockport [get_bd_pins zynq_ultra_ps_e_0/FCLK_CLK0]
       connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/S_AXI_HP0_ACLK]
