@@ -73,7 +73,7 @@ set_property -name "default_lib" -value "xil_defaultlib" -objects $obj
 set_property -name "ip_cache_permissions" -value "read write" -objects $obj
 set_property -name "ip_output_repo" -value "$proj_dir/$PROJNAME.cache/ip" -objects $obj
 set_property -name "part" -value "$PART" -objects $obj
-set_property board_part xilinx.com:$BOARD:part0:2.2 [current_project]
+#set_property board_part xilinx.com:$BOARD:part0:2.2 [current_project]
 set_property -name "sim.ip.auto_export_scripts" -value "1" -objects $obj
 set_property -name "simulator_language" -value "VHDL" -objects $obj
 set_property -name "target_language" -value "VHDL" -objects $obj
@@ -158,31 +158,39 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
       # make DDR and FIXED_IO external
       apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells zynq_ultra_ps_e_0]
       # connect processor clock to default IPBs
-      set clockport [get_bd_pins zynq_ultra_ps_e_0/FCLK_CLK0]
-      connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/S_AXI_HP0_ACLK]
-      connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/M_AXI_GP0_ACLK]
+      #set clockport [get_bd_pins zynq_ultra_ps_e_0/FCLK_CLK0]
+      set clockport [get_bd_pins zynq_ultra_ps_e_0/PL_CLK0]
+      #connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/S_AXI_HP0_ACLK]
+      connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_lpd_aclk]
+      #connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/M_AXI_GP0_ACLK]
+      connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/saxihp0_fpd_aclk]
       connect_bd_net $clockport [get_bd_pins axi_interconnect_0/ACLK]
       connect_bd_net $clockport [get_bd_pins axi_interconnect_0/S00_ACLK]
       connect_bd_net $clockport [get_bd_pins axi_interconnect_0/M00_ACLK]
       connect_bd_net $clockport [get_bd_pins smartconnect_0/aclk]
       connect_bd_net $clockport [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
       # connect processor reset to processor reset system
-      connect_bd_net [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/FCLK_RESET0_N]
+      #connect_bd_net [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/FCLK_RESET0_N]
+      connect_bd_net [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
       # connect processor reset system to default IPBs
       set rstport [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
       connect_bd_net [get_bd_pins axi_interconnect_0/ARESETN] [get_bd_pins proc_sys_reset_0/interconnect_aresetn]
       connect_bd_net [get_bd_pins smartconnect_0/aresetn] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
-      connect_bd_net [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn] 
+      connect_bd_net [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
       connect_bd_net [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
       # connect GP0 bus to AXI interconnect
-      connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_GP0] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
+      #connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_GP0] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
+      connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_LPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
       # connect HP0 bus to multiplexer
-      connect_bd_intf_net [get_bd_intf_pins smartconnect_0/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0]
+      #connect_bd_intf_net [get_bd_intf_pins smartconnect_0/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0]
+      connect_bd_intf_net [get_bd_intf_pins smartconnect_0/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD]
       # create external clk and reset to avoid critical warnings with external axi stream interfaces
       create_bd_port -dir O -type clk clk
-      connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/FCLK_CLK0] [get_bd_ports clk]
+      #connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/FCLK_CLK0] [get_bd_ports clk]
+      connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/PL_CLK0] [get_bd_ports clk]
       create_bd_port -dir O -type rst rst
-      connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/FCLK_RESET0_N] [get_bd_ports rst]
+      #connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/FCLK_RESET0_N] [get_bd_ports rst]
+      connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/pl_resetn0] [get_bd_ports rst]
       } else {
       # create clock port
       create_bd_port -dir I -type clk clk
