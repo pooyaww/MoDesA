@@ -55,10 +55,10 @@ set(synthesis "on")
 # model need to be in models folder
 #
 
-#set(model_name "test_model_hw_only")
+set(model_name "test_model_hw_only")
 #set(model_name "test_model_hw_sw")
 #set(model_name "test_model_hw_sw_hw_sw")
-set(model_name "test_model_sw_hw")
+#set(model_name "test_model_sw_hw")
 #set(model_name "test_model_sw_only")
 
 set(model_path "test_model")
@@ -70,8 +70,8 @@ set(profiling "off")
 #set(device "xc7z020clg484-1")
 # ZCU106
 set(device "xczu7ev-ffvc1156-2-e")
-# set board
-set(board "zcu106")
+# set board name only for pure HW, ex "ZCU106" or OFF otherwise
+set(board "OFF")
 # default clk = 10 ns = 100MHz
 set(clk "10")
 # set accurate for synthesis evaluation with Vivado
