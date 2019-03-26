@@ -64,7 +64,7 @@ puts $wfp "</tr>"
 
 foreach dir $subdirs {
   if {[catch {set file [glob -directory $dir -type f *{auxiliary.xml}*]} errmsg]} {
-    puts "could not generate HLS HW estimation no auxiliary file found" 
+    puts "could not generate HLS HW estimation no auxiliary file found"
   } else {
     puts "found IPB auxiliary file $file"
     # Read the auxiliary file
@@ -75,13 +75,13 @@ foreach dir $subdirs {
 
     foreach newl $filelines {
       if {[string first "<xd:acceleratorMap" $newl] != -1} {
-        regexp -all {functionName="(.*?)"} $newl -> blk_name 
+        regexp -all {functionName="(.*?)"} $newl -> blk_name
         puts $wfp "<tr>"
         puts $wfp "<td><b>${blk_name}</b></td>"
       } elseif {[string first "<xd:latencyEstimates" $newl] != -1} {
-        regexp -all {best-case="(.*?)"} $newl -> bestcase 
-        regexp -all {worst-case="(.*?)"} $newl -> worstcase 
-        regexp -all {average-case="(.*?)"} $newl -> averagecase 
+        regexp -all {best-case="(.*?)"} $newl -> bestcase
+        regexp -all {worst-case="(.*?)"} $newl -> worstcase
+        regexp -all {average-case="(.*?)"} $newl -> averagecase
         puts $wfp "<td>${bestcase}</td>"
         puts $wfp "<td>${worstcase}</td>"
         puts $wfp "<td>${averagecase}</td>"
@@ -89,7 +89,7 @@ foreach dir $subdirs {
         regexp -all {LUT="(.*?)"} $newl -> lut
         regexp -all {FF="(.*?)"} $newl -> ff
         regexp -all {BRAM="(.*?)"} $newl -> bram
-        regexp -all {DSP="(.*?)"} $newl -> dsp 
+        regexp -all {DSP="(.*?)"} $newl -> dsp
         puts $wfp "<td>${lut}</td>"
         puts $wfp "<td>${ff}</td>"
         puts $wfp "<td>${bram}</td>"
@@ -98,7 +98,7 @@ foreach dir $subdirs {
       }
     }
   }
-}  
+}
 
 puts $wfp "</table>"
 # close hw_objectives file
