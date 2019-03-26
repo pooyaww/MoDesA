@@ -24,7 +24,7 @@ entity write_adapter is
   port (
          -- Users to add ports here
          
-         -- data in axi stream interface 
+         -- data in axi stream interface
          data_in : in std_logic_vector(DATA_WIDTH-1 downto 0);
          data_in_valid : in std_logic;
          data_in_ready : out std_logic;
@@ -36,7 +36,7 @@ entity write_adapter is
          -- User ports ends
          -- Do not modify the ports beyond this line
 
-         -- clk of ip 
+         -- clk of ip
          s00_axi_aclk    : in std_logic;
          -- rst of ip
          s00_axi_aresetn    : in std_logic;
@@ -111,9 +111,9 @@ architecture arch_imp of write_adapter is
 
          );
   end component write_adapter_S00_AXI;
-  
+
 begin
- 
+
   -- Instantiation of Axi Bus Interface S00_AXI
   write_adapter_S00_AXI_inst : write_adapter_S00_AXI
   generic map (
@@ -148,14 +148,14 @@ begin
              data_in        =>  data_in,
              data_in_valid  =>  data_in_valid,
              data_in_ready  =>  data_in_ready,
-             
+
              to_dma_data    =>  to_dma_data,
              to_dma_valid   =>  to_dma_valid ,
-             to_dma_tlast   =>  to_dma_tlast,  
-             to_dma_ready   =>  to_dma_ready 
+             to_dma_tlast   =>  to_dma_tlast,
+             to_dma_ready   =>  to_dma_ready
 
-           );             
-         
+           );
+
                -- Add user logic here
 
                -- User logic ends
