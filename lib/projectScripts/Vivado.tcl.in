@@ -1,31 +1,3 @@
-##
-# -------------------------------------------------------------------------  
-#   Copyright (c) 2017 Hardware-Software-Co-Design, Friedrich-
-#   Alexander-Universitaet Erlangen-Nuernberg (FAU), Germany.
-#   All rights reserved.
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-# ------------------------------------------------------------------------- 
-#                                                                                
-#  @author  Streit Franz-Josef                                                    
-#  @mail    franz-josef.streit@fau.de                                                   
-#  @date    09 November 2017                                                      
-#  @version 0.1                                                                  
-#  @brief   Vivado tcl file for Block Design generation 
-#                                                                                
-#                                                                                
-##
-
 set MODELNAME "@model_name@"
 set PART "@device@"
 set PERIOD "@clk@"
@@ -140,12 +112,10 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
      if {$hwswdesign == "true"} {
       # create default IPBs for a HW/SW Co-Design
       # instanciate zynq processing system
-      #create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7 processing_system7_0
-       create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.2 zynq_ultra_ps_e_0
+      create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.2 zynq_ultra_ps_e_0
       # config zynq processing system
       #set_property -dict [list CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ [expr (1/($PERIOD*pow(10,-9))*pow(10,-6))] CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.PCW_S_AXI_HP0_DATA_WIDTH {32}] [get_bd_cells zynq_ultra_ps_e_0]
       set_property -dict [list CONFIG.PSU__USE__S_AXI_GP2 {1} CONFIG.PSU__SAXIGP2__DATA_WIDTH {32}] [get_bd_cells zynq_ultra_ps_e_0]
-      #set_property -dict [list CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} CONFIG.PCW_TTC0_PERIPHERAL_ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
       set_property -dict [list CONFIG.PSU__QSPI__PERIPHERAL__ENABLE {1} CONFIG.PSU__QSPI__GRP_FBCLK__ENABLE {0} CONFIG.PSU__TTC0__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
       # add AXI Light interconnect
       create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect axi_interconnect_0
@@ -159,12 +129,9 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
       create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_0
       # make DDR and FIXED_IO external
       apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells zynq_ultra_ps_e_0]
-      # connect processor clock to default IPBs
       #set clockport [get_bd_pins zynq_ultra_ps_e_0/FCLK_CLK0]
       set clockport [get_bd_pins zynq_ultra_ps_e_0/PL_CLK0]
-      #connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/S_AXI_HP0_ACLK]
       connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_lpd_aclk]
-      #connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/M_AXI_GP0_ACLK]
       connect_bd_net $clockport [get_bd_pins zynq_ultra_ps_e_0/saxihp0_fpd_aclk]
       connect_bd_net $clockport [get_bd_pins axi_interconnect_0/ACLK]
       connect_bd_net $clockport [get_bd_pins axi_interconnect_0/S00_ACLK]
@@ -172,7 +139,6 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
       connect_bd_net $clockport [get_bd_pins smartconnect_0/aclk]
       connect_bd_net $clockport [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
       # connect processor reset to processor reset system
-      #connect_bd_net [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/FCLK_RESET0_N]
       connect_bd_net [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
       # connect processor reset system to default IPBs
       set rstport [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
@@ -181,17 +147,12 @@ if {[string equal [get_runs -quiet synth_1] ""]} {
       connect_bd_net [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
       connect_bd_net [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
       # connect GP0 bus to AXI interconnect
-      #connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_GP0] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
       connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_LPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
-      # connect HP0 bus to multiplexer
-      #connect_bd_intf_net [get_bd_intf_pins smartconnect_0/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0]
       connect_bd_intf_net [get_bd_intf_pins smartconnect_0/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD]
       # create external clk and reset to avoid critical warnings with external axi stream interfaces
       create_bd_port -dir O -type clk clk
-      #connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/FCLK_CLK0] [get_bd_ports clk]
       connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/PL_CLK0] [get_bd_ports clk]
       create_bd_port -dir O -type rst rst
-      #connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/FCLK_RESET0_N] [get_bd_ports rst]
       connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/pl_resetn0] [get_bd_ports rst]
       } else {
       # create clock port
