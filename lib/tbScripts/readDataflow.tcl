@@ -1,29 +1,4 @@
-##
-# -------------------------------------------------------------------------  
-#   Copyright (c) 2017 Hardware-Software-Co-Design, Friedrich-
-#   Alexander-Universitaet Erlangen-Nuernberg (FAU), Germany.
-#   All rights reserved.
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-# ------------------------------------------------------------------------- 
-#                                                                                
-#  @author  Streit Franz-Josef                                                     
-#  @mail    franz-josef.streit@fau.de                                                   
-#  @date    20 June 2018                                                      
-#  @version 0.1                                                                  
-#  @brief   tcl script to interpret the HW Data-Flow Graph (DFG) 
-#                                                                                
-##
+# Tcl script to interpret the HW Data-Flow Graph (DFG) 
 
 # Read content of Data-Flow Graph (DFG)
 if { [file exists ${MODELNAME}_hw/dfg_hw.txt] == 1} {

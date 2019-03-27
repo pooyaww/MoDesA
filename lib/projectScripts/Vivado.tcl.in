@@ -1,3 +1,4 @@
+# Vivado tcl file for Block Design generation
 set MODELNAME "@model_name@"
 set PART "@device@"
 set PERIOD "@clk@"
